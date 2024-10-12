@@ -1,18 +1,17 @@
 const { Router } = require('express');
+const { usersController } = require('../controllers');
 
 const usersRouter = Router();
 
 usersRouter
   .route('/')
-  .post(() => {})
-  .get((req, res) => {
-    res.status(501).send('Not Implemented 007');
-  });
+  .post(usersController.createUser)
+  .get(usersController.getUsers);
 
 usersRouter
   .route('/:userId')
-  .get(() => {})
-  .patch(() => {})
-  .delete(() => {});
+  .get(usersController.getUserById)
+  .patch(usersController.updateUserById)
+  .delete(usersController.deleteUserById);
 
 module.exports = usersRouter;
