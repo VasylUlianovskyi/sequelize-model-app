@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const { User } = require('./../models');
 const createHttpError = require('http-errors');
@@ -7,9 +6,6 @@ module.exports.createUser = async (req, res, next) => {
   const { body } = req;
 
   try {
-    const SALT_RAUNDS = 10;
-    body.passwHash = await bcrypt.hash(body.passwHash, SALT_RAUNDS);
-
     const createdUser = await User.create(body);
 
     // const prepatedUser = { ...createdUser.get() };
@@ -73,6 +69,86 @@ module.exports.getUserById = async (req, res, next) => {
   }
 };
 
-module.exports.updateUserById = async (req, res, next) => {};
+module.exports.updateUserById = async (req, res, next) => {
+  const {
+    params: { userId },
+    body,
+  } = req;
 
-module.exports.deleteUserById = async (req, res, next) => {};
+  try {
+    const [, [updatedUser]] = await User.update(body, {
+      where: { id: userId },
+      raw: true,
+      returning: true,
+    });
+
+    if (!updatedUser) {
+      return next(createHttpError(404, 'User Not Found'));
+    }
+
+    res.status(200).send({ data: updatedUser });
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports.updateOrCreateUserById = async (req, res, next) => {
+  // знайти конистувача 1
+  // якщо існує - оновити 1
+  // інакше - створити    1
+  //  1 + 1 = 2
+
+  // спробувати оновити 1
+  // якщо оновилося - ок 0
+  // інакше - створити 1
+  // 1 + 0 = 1 or 1 + 1 = 2
+
+  const {
+    body,
+    params: { userId },
+  } = req;
+
+  // TODO yup validation mw (422)
+  try {
+    const [, [updatedUser]] = await User.update(body, {
+      where: { id: userId },
+      raw: true,
+      returning: true,
+    });
+
+    if (!updatedUser) {
+      body.id = userId;
+      return next();
+    }
+
+    const prepatedUser = _.omit(updatedUser, [
+      'passwHash',
+      'createdAt',
+      'updatedAt',
+    ]);
+
+    res.status(200).send({ data: prepatedUser });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.deleteUserById = async (req, res, next) => {
+  const {
+    params: { userId },
+  } = req;
+
+  try {
+    const deletedCount = await User.destroy({
+      where: { id: userId },
+    });
+
+    if (deletedCount === 0) {
+      return next(createHttpError(404, 'User Not Found'));
+    }
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
