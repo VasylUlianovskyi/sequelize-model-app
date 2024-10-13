@@ -10,3 +10,17 @@ Content-Type: application/json
     "birthday": "2000-05-06",
     "gender": "male"
 }
+
+### 500
+
+POST http://localhost:5000/api/users
+Content-Type: application/json
+
+{
+    "nickname": "t",
+    "email": "mail13@mail.com",
+    "passwHash": "1234",
+    "birthday": "2000-05-06",
+    "gender": "male"
+}
+

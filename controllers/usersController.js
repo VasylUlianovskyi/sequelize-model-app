@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const { User } = require('./../models');
+const createHttpError = require('http-errors');
 
 module.exports.createUser = async (req, res, next) => {
   const { body } = req;
@@ -30,10 +31,47 @@ module.exports.createUser = async (req, res, next) => {
 };
 
 module.exports.getUsers = async (req, res, next) => {
-  res.status(501).send('GET /api/users Not Implemented');
+  const {
+    query: { page, results },
+  } = req;
+
+  // TODO pagination mw
+  const limit = results;
+  const offset = (page - 1) * results;
+
+  try {
+    const foundUsers = await User.findAll({
+      attributes: { exclude: ['passwHash', 'createdAt', 'updatedAt'] },
+      limit,
+      offset,
+      odrer: ['id'],
+      raw: true,
+    });
+    res.status(200).send({ data: foundUsers });
+  } catch (err) {
+    next(err);
+  }
 };
 
-module.exports.getUserById = async (req, res, next) => {};
+module.exports.getUserById = async (req, res, next) => {
+  const {
+    params: { userId },
+  } = req;
+
+  try {
+    const foundUser = await User.findByPk(userId, {
+      attributes: { exclude: ['passwHash', 'createdAt', 'updatedAt'] },
+      raw: true,
+    });
+    if (!foundUser) {
+      return next(createHttpError(404, 'User Not Found'));
+    }
+
+    res.status(200).send({ data: foundUser });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports.updateUserById = async (req, res, next) => {};
 
