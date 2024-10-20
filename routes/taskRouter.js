@@ -1,18 +1,18 @@
 const { Router } = require('express');
+const { tasksController } = require('./../controllers');
 
 const taskRouter = Router();
 
 taskRouter
   .route('/')
-  .post(() => {})
-  .get((req, res) => {
-    res.status(501).send('Not Implemented 008');
-  });
+  .post(tasksController.createTask)
+  .get(tasksController.getTasks);
 
 taskRouter
   .route('/:taskId')
-  .get(() => {})
-  .patch(() => {})
-  .delete(() => {});
+  .get(tasksController.getTaskById)
+  .patch(tasksController.updateTaskById)
+  .put(tasksController.updateOrCreateTaskById, tasksController.createTask)
+  .delete(tasksController.deleteTaskById);
 
 module.exports = taskRouter;

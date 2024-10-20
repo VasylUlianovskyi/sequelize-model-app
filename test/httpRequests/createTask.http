@@ -1,0 +1,26 @@
+### 201 {task}
+
+POST http://localhost:5000/api/tasks
+Content-Type: application/json
+
+{
+    "title": "Complete project documentation",
+    "description": "Write and organize all the project documentation for the final review.",
+    "deadline": "2025-11-25",
+    "isDone": false,
+    "priority": "high"
+}
+
+### 500 {task}
+
+POST http://localhost:5000/api/tasks
+Content-Type: application/json
+
+{
+    "title": "T",  
+    "description": "Short task description",
+    "deadline": "2024-11-25",
+    "isDone": false,
+    "priority": "medium",
+    "userId": 1
+}
