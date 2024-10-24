@@ -3,7 +3,7 @@
 module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.bulkInsert(
-      'Tasks',
+      'tasks',
       [
         {
           title: 'Complete project documentation',
@@ -11,7 +11,7 @@ module.exports = {
             'Write and organize all the project documentation for the final review.',
           deadline: '2024-11-25',
           is_done: false,
-          priority: 'high',
+          priority: 'medium',
           created_at: new Date(),
           updated_at: new Date(),
         },
@@ -20,6 +20,6 @@ module.exports = {
     );
   },
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('Tasks', null, {});
+    await queryInterface.bulkDelete('tasks', null, {});
   },
 };

@@ -1,0 +1,5 @@
+### 200 {tasks}
+GET http://localhost:5000/api/tasks/1
+
+### 404 Not Found
+GET http://localhost:5000/api/tasks/0

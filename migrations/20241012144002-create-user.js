@@ -62,6 +62,7 @@ module.exports = {
     });
   },
   async down (queryInterface, Sequelize) {
+    await queryInterface.removeConstraint('users', 'check_tel_users');
     await queryInterface.dropTable('users');
   },
 };

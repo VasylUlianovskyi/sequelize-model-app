@@ -1,0 +1,26 @@
+### 200 {task}
+PUT http://localhost:5000/api/tasks/2
+Content-Type: application/json
+
+{
+    "title": "Read",
+    "description": "Read 10 pages",
+    "deadline": "2024-10-30",
+    "isDone": false,
+    "priority": "low"
+}
+
+
+
+### 201 {task}
+PUT http://localhost:5000/api/tasks/10
+Content-Type: application/json
+
+
+{
+    "title": "Read",
+    "description": "Read 10 pages",
+    "deadline": "2024-10-30",
+    "isDone": false,
+    "priority": "low"
+}
